@@ -1,0 +1,69 @@
+{
+  "version": 3,
+  "targets": {
+    "net6.0": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    "net6.0": []
+  },
+  "packageFolders": {
+    "/home/cmaria/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Domain/bubbleTea.Domain.csproj",
+      "projectName": "bubbleTea.Domain",
+      "projectPath": "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Domain/bubbleTea.Domain.csproj",
+      "packagesPath": "/home/cmaria/.nuget/packages/",
+      "outputPath": "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Domain/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/home/cmaria/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net6.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net6.0": {
+        "targetAlias": "net6.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.AspNetCore.App": {
+            "privateAssets": "none"
+          },
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/home/cmaria/.dotnet/sdk/6.0.412/RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

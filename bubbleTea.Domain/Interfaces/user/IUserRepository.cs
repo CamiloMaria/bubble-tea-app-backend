@@ -4,7 +4,7 @@ namespace BubbleTea.Domain.Interfaces
 {
     public interface IUserRepository
     {
-        Task<Response<IEnumerable<User>>> GetAllProductAsync();
+        Task<Response<IEnumerable<User>>> GetAllUserAsync();
         Task<Response<User>> GetUserByIdAsync(int id);
         Task<Response<User>> AddUserAsync(User user);
         Task<Response<User>> UpdateUSerAsync(User user);

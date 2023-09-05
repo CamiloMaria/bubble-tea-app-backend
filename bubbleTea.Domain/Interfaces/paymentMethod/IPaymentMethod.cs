@@ -2,7 +2,7 @@ using BubbleTea.Domain.Entities;
 
 namespace BubbleTea.Domain.Interfaces
 {
-    public interface IPaymentMethod
+    public interface IPaymentMethodRepository
     {
         Task<Response<IEnumerable<PaymentMethod>>> GetAllPaymentMethodAsync();
         Task<Response<PaymentMethod>> GetPaymentMethodByIdAsync(int id);

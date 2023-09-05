@@ -1,9 +1,11 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BubbleTea.Domain.Entities
 {
     public class AuthToken
     {
+        [Key]
         public int Id { get; set; }
         public string Token { get; set; } = string.Empty;
         public int UserId { get; set; }

@@ -4,10 +4,11 @@ namespace BubbleTea.Application.Interfaces
 {
     public interface IProductToppingService
     {
-        Task<Response<IEnumerable<Topping>>> GetAllTopping();
-        Task<Response<Topping>> GetToppingById(int id);
-        Task<Response<Topping>> AddTopping(Topping topping);
-        Task<Response<Topping>> UpdateTopping(Topping topping);
-        Task<Response<Topping>> DeleteTopping(int id);
+        Task<Response<IEnumerable<Topping>>> GetAllProductTopping(int page, int pageSize);
+        Task<Response<Topping>> GetProductToppingById(int id);
+        Task<Response<Topping>> CreateProductTopping(Topping topping);
+        Task<Response<Topping>> UpdateProductTopping(Topping topping);
+        Task<Response<Topping>> DeleteProductTopping(int id);
+        Task<Response<IEnumerable<Topping>>> GetProductToppingByProductId(int productId);
     }
 }

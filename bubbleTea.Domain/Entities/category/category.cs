@@ -1,9 +1,11 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BubbleTea.Domain.Entities
 {
     public class Category
     {
+        [Key]
         public int Id { get; set; }
         public string CategoryName { get; set; } = string.Empty;
 

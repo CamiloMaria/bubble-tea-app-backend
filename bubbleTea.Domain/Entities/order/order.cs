@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using BubbleTea.Domain.Enum;
 
@@ -5,6 +6,7 @@ namespace BubbleTea.Domain.Entities
 {
     public class Order
     {
+        [Key]
         public int Id { get; set; }
 
         public int UserId { get; set; }

@@ -1,0 +1,184 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Infrastructure/bubbleTea.Infrastructure.csproj": {}
+  },
+  "projects": {
+    "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Application/bubbleTea.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Application/bubbleTea.Application.csproj",
+        "projectName": "bubbleTea.Application",
+        "projectPath": "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Application/bubbleTea.Application.csproj",
+        "packagesPath": "/home/cmaria/.nuget/packages/",
+        "outputPath": "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Application/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/cmaria/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Domain/bubbleTea.Domain.csproj": {
+                "projectPath": "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Domain/bubbleTea.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/cmaria/.dotnet/sdk/6.0.412/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Domain/bubbleTea.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Domain/bubbleTea.Domain.csproj",
+        "projectName": "bubbleTea.Domain",
+        "projectPath": "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Domain/bubbleTea.Domain.csproj",
+        "packagesPath": "/home/cmaria/.nuget/packages/",
+        "outputPath": "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Domain/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/cmaria/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/cmaria/.dotnet/sdk/6.0.412/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Infrastructure/bubbleTea.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Infrastructure/bubbleTea.Infrastructure.csproj",
+        "projectName": "bubbleTea.Infrastructure",
+        "projectPath": "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Infrastructure/bubbleTea.Infrastructure.csproj",
+        "packagesPath": "/home/cmaria/.nuget/packages/",
+        "outputPath": "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Infrastructure/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/cmaria/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Application/bubbleTea.Application.csproj": {
+                "projectPath": "/home/cmaria/Documentos/bubble-tea-app-backend/bubbleTea.Application/bubbleTea.Application.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/cmaria/.dotnet/sdk/6.0.412/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

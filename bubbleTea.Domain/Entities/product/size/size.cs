@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace BubbleTea.Domain.Entities
 {
     public class Size
     {
+        [Key]
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
 

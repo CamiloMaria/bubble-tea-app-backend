@@ -33,10 +33,9 @@ namespace BubbleTea.Domain.Entities
         [ForeignKey(nameof(PaymentMethodId))]
         public PaymentMethod PaymentMethod { get; set; } = new PaymentMethod();
 
-        public ICollection<Order> Orders { get; set; } = new List<Order>();
-
         public DateTime CreatedAt { get; } = DateTime.Now;
 
         public DateTime? UpdatedAt { get; set; }
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 }

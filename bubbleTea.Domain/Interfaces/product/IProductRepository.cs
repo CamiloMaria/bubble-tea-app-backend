@@ -9,5 +9,6 @@ namespace BubbleTea.Domain.Interfaces
         Task<Response<Product>> CreateProductAsync(Product product);
         Task<Response<Product>> UpdateProductAsync(Product product);
         Task<Response<Product>> DeleteProductAsync(int id);
+        Task<Response<IEnumerable<Product>>> GetProductByCategoryAsync(int categoryId, int page, int pageSize);
     }
 }

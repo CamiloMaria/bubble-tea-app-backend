@@ -9,5 +9,6 @@ namespace BubbleTea.Application.Interfaces
         Task<Response<Product>> CreateProduct(Product product);
         Task<Response<Product>> UpdateProduct(Product product);
         Task<Response<Product>> DeleteProduct(int id);
+        Task<Response<IEnumerable<Product>>> GetProductByCategory(int categoryId, int page, int pageSize);
     }
 }

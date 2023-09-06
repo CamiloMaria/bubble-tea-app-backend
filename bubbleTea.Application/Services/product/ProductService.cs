@@ -37,5 +37,10 @@ namespace BubbleTea.Application.Services
         {
             return await _productRepository.DeleteProductAsync(id);
         }
+
+        public async Task<Response<IEnumerable<Product>>> GetProductByCategory(int categoryId, int page, int pageSize)
+        {
+            return await _productRepository.GetProductByCategoryAsync(categoryId, page, pageSize);
+        }
     }
 }

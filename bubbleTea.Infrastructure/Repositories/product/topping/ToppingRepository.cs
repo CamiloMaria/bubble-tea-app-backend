@@ -40,20 +40,20 @@ namespace BubbleTea.Infrastructure.Repositories
                         var response = new Response<IEnumerable<Topping>>(message, 404, "Not Found");
                         response.AddError(message);
                         return response;
+                    default:
+                        return new Response<IEnumerable<Topping>>
+                        {
+                            Data = pagedToppings,
+                            Page = page,
+                            PageSize = pageSize,
+                            TotalCount = totalToppings,
+                            TotalPages = (int)Math.Ceiling((double)totalToppings / pageSize),
+                            Success = true,
+                            Message = "Se obtuvieron los toppings correctamente",
+                            StatusCode = 200,
+                            ReasonPhrase = "OK"
+                        };
                 }
-
-                return new Response<IEnumerable<Topping>>
-                {
-                    Data = pagedToppings,
-                    Page = page,
-                    PageSize = pageSize,
-                    TotalCount = totalToppings,
-                    TotalPages = (int)Math.Ceiling((double)totalToppings / pageSize),
-                    Success = true,
-                    Message = "Se obtuvieron los toppings correctamente",
-                    StatusCode = 200,
-                    ReasonPhrase = "OK"
-                };
             }
             catch (Exception ex)
             {
@@ -80,22 +80,23 @@ namespace BubbleTea.Infrastructure.Repositories
 
                 var topping = cacheEntry?.FirstOrDefault(t => t.Id == id);
 
-                if (topping == null)
+                switch (topping)
                 {
-                    var message = $"No se encontró el topping con id {id}";
-                    var response = new Response<Topping>(message, 404, "Not Found");
-                    response.AddError(message);
-                    return response;
+                    case null:
+                        var message = $"No se encontró el topping con id {id}";
+                        var response = new Response<Topping>(message, 404, "Not Found");
+                        response.AddError(message);
+                        return response;
+                    default:
+                        return new Response<Topping>
+                        {
+                            Data = topping,
+                            Success = true,
+                            Message = $"Se obtuvo el topping con id {id} correctamente",
+                            StatusCode = 200,
+                            ReasonPhrase = "OK"
+                        };
                 }
-
-                return new Response<Topping>
-                {
-                    Data = topping,
-                    Success = true,
-                    Message = $"Se obtuvo el topping con id {id} correctamente",
-                    StatusCode = 200,
-                    ReasonPhrase = "OK"
-                };
             }
             catch (Exception ex)
             {
@@ -129,21 +130,21 @@ namespace BubbleTea.Infrastructure.Repositories
                         var response = new Response<Topping>(message, 400, "Bad Request");
                         response.AddError(message);
                         return response;
-                    case null:
-                        break;
+                    default:
+                        await _dbContext.Toppings.AddAsync(topping);
+                        await _dbContext.SaveChangesAsync();
+
+                        _cache.Remove(_cacheKey);
+
+                        return new Response<Topping>
+                        {
+                            Data = topping,
+                            Success = true,
+                            Message = "Topping creado correctamente",
+                            StatusCode = 201,
+                            ReasonPhrase = "Created"
+                        };
                 }
-
-                await _dbContext.Toppings.AddAsync(topping);
-                await _dbContext.SaveChangesAsync();
-
-                return new Response<Topping>
-                {
-                    Data = topping,
-                    Success = true,
-                    Message = "Topping creado correctamente",
-                    StatusCode = 201,
-                    ReasonPhrase = "Created"
-                };
             }
             catch (Exception ex)
             {
@@ -182,22 +183,22 @@ namespace BubbleTea.Infrastructure.Repositories
                         response = new Response<Topping>(message, 400, "Bad Request");
                         response.AddError(message);
                         return response;
-                    case { } when existingTopping.Name != topping.Name:
-                        break;
+                    default:
+                        _dbContext.Entry(existingTopping).State = EntityState.Detached;
+                        _dbContext.Entry(topping).State = EntityState.Modified;
+                        await _dbContext.SaveChangesAsync();
+
+                        _cache.Remove(_cacheKey);
+
+                        return new Response<Topping>
+                        {
+                            Data = existingTopping,
+                            Success = true,
+                            Message = "Topping actualizado correctamente",
+                            StatusCode = 200,
+                            ReasonPhrase = "OK"
+                        };
                 }
-
-                _dbContext.Entry(existingTopping).State = EntityState.Detached;
-                _dbContext.Entry(topping).State = EntityState.Modified;
-                await _dbContext.SaveChangesAsync();
-
-                return new Response<Topping>
-                {
-                    Data = existingTopping,
-                    Success = true,
-                    Message = "Topping actualizado correctamente",
-                    StatusCode = 200,
-                    ReasonPhrase = "OK"
-                };
             }
             catch (Exception ex)
             {
@@ -236,20 +237,20 @@ namespace BubbleTea.Infrastructure.Repositories
                         response = new Response<Topping>(message, 400, "Bad Request");
                         response.AddError(message);
                         return response;
-                    case { }:
-                        break;
+                    default:
+                        _dbContext.Toppings.Remove(existingTopping);
+                        await _dbContext.SaveChangesAsync();
+
+                        _cache.Remove(_cacheKey);
+
+                        return new Response<Topping>
+                        {
+                            Data = existingTopping,
+                            Message = "Topping eliminado correctamente",
+                            StatusCode = 200,
+                            ReasonPhrase = "OK"
+                        };
                 }
-
-                _dbContext.Toppings.Remove(existingTopping);
-                await _dbContext.SaveChangesAsync();
-
-                return new Response<Topping>
-                {
-                    Data = existingTopping,
-                    Message = "Topping eliminado correctamente",
-                    StatusCode = 200,
-                    ReasonPhrase = "OK"
-                };
             }
             catch (Exception ex)
             {

@@ -40,20 +40,20 @@ namespace BubbleTea.Infrastructure.Repositories
                         var response = new Response<IEnumerable<Product>>(message, 404, "Not Found");
                         response.AddError(message);
                         return response;
+                    default:
+                        return new Response<IEnumerable<Product>>
+                        {
+                            Data = pagedProducts,
+                            Page = page,
+                            PageSize = pageSize,
+                            TotalCount = totalProducts,
+                            TotalPages = (int)Math.Ceiling((double)totalProducts / pageSize),
+                            Success = true,
+                            Message = "Productos obtenidos correctamente",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
-
-                return new Response<IEnumerable<Product>>
-                {
-                    Data = pagedProducts,
-                    Page = page,
-                    PageSize = pageSize,
-                    TotalCount = totalProducts,
-                    TotalPages = (int)Math.Ceiling((double)totalProducts / pageSize),
-                    Success = true,
-                    Message = "Productos obtenidos correctamente",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {
@@ -87,18 +87,16 @@ namespace BubbleTea.Infrastructure.Repositories
                         var response = new Response<Product>(message, 404, "Not Found");
                         response.AddError(message);
                         return response;
-                    case { Id: var productId } when productId == id:
-                        break;
+                    default:
+                        return new Response<Product>
+                        {
+                            Data = product,
+                            Success = true,
+                            Message = "Producto obtenido correctamente",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
-
-                return new Response<Product>
-                {
-                    Data = product,
-                    Success = true,
-                    Message = "Producto obtenido correctamente",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {
@@ -132,21 +130,21 @@ namespace BubbleTea.Infrastructure.Repositories
                         var response = new Response<Product>(message, 400, "Bad Request");
                         response.AddError(message);
                         return response;
-                    case null:
-                        break;
+                    default:
+                    await _dbContext.Products.AddAsync(product);
+                    await _dbContext.SaveChangesAsync();
+
+                    _cache.Remove(_cacheKey);
+
+                    return new Response<Product>
+                    {
+                        Data = product,
+                        Success = true,
+                        Message = "Producto creado correctamente",
+                        StatusCode = 201,
+                        ReasonPhrase = "Created"
+                    };
                 }
-
-                await _dbContext.Products.AddAsync(product);
-                await _dbContext.SaveChangesAsync();
-
-                return new Response<Product>
-                {
-                    Data = product,
-                    Success = true,
-                    Message = "Producto creado correctamente",
-                    StatusCode = 201,
-                    ReasonPhrase = "Created"
-                };
             }
             catch (Exception ex)
             {
@@ -185,22 +183,22 @@ namespace BubbleTea.Infrastructure.Repositories
                         response = new Response<Product>(message, 400, "Bad Request");
                         response.AddError(message);
                         return response;
-                    case { } when existingProduct.Name != product.Name:
-                        break;
+                    default:
+                        _dbContext.Entry(existingProduct).State = EntityState.Detached;
+                        _dbContext.Entry(product).State = EntityState.Modified;
+                        await _dbContext.SaveChangesAsync();
+
+                        _cache.Remove(_cacheKey);
+
+                        return new Response<Product>
+                        {
+                            Data = product,
+                            Success = true,
+                            Message = "Producto actualizado correctamente",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
-
-                _dbContext.Entry(existingProduct).State = EntityState.Detached;
-                _dbContext.Entry(product).State = EntityState.Modified;
-                await _dbContext.SaveChangesAsync();
-
-                return new Response<Product>
-                {
-                    Data = product,
-                    Success = true,
-                    Message = "Producto actualizado correctamente",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {
@@ -254,21 +252,21 @@ namespace BubbleTea.Infrastructure.Repositories
                         response = new Response<Product>(message, 400, "Bad Request");
                         response.AddError(message);
                         return response;
-                    case { Id: var productId } when productId == id:
-                        break;
+                    default:
+                        _dbContext.Products.Remove(existingProduct);
+                        await _dbContext.SaveChangesAsync();
+
+                        _cache.Remove(_cacheKey);
+
+                        return new Response<Product>
+                        {
+                            Data = existingProduct,
+                            Success = true,
+                            Message = "Producto eliminado correctamente",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
-
-                _dbContext.Products.Remove(existingProduct);
-                await _dbContext.SaveChangesAsync();
-
-                return new Response<Product>
-                {
-                    Data = existingProduct,
-                    Success = true,
-                    Message = "Producto eliminado correctamente",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {
@@ -304,20 +302,20 @@ namespace BubbleTea.Infrastructure.Repositories
                         var response = new Response<IEnumerable<Product>>(message, 404, "Not Found");
                         response.AddError(message);
                         return response;
+                    default:
+                        return new Response<IEnumerable<Product>>
+                        {
+                            Data = pagedProducts,
+                            Page = page,
+                            PageSize = pageSize,
+                            TotalCount = totalProducts,
+                            TotalPages = (int)Math.Ceiling((double)totalProducts / pageSize),
+                            Success = true,
+                            Message = "Productos obtenidos correctamente",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
-
-                return new Response<IEnumerable<Product>>
-                {
-                    Data = pagedProducts,
-                    Page = page,
-                    PageSize = pageSize,
-                    TotalCount = totalProducts,
-                    TotalPages = (int)Math.Ceiling((double)totalProducts / pageSize),
-                    Success = true,
-                    Message = "Productos obtenidos correctamente",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {

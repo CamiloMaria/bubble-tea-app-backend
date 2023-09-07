@@ -38,12 +38,12 @@ namespace BubbleTea.Application.Services
             return await _orderItemRepository.DeleteOrderItemAsync(id);
         }
 
-        public async Task<Response<OrderItem>> GetOrderItemByOrderId(int orderId)
+        public async Task<Response<IEnumerable<OrderItem>>> GetOrderItemByOrderId(int orderId)
         {
             return await _orderItemRepository.GetOrderItemByOrderIdAsync(orderId);
         }
 
-        public async Task<Response<OrderItem>> GetOrderItemByProductId(int productId)
+        public async Task<Response<IEnumerable<OrderItem>>> GetOrderItemByProductId(int productId)
         {
             return await _orderItemRepository.GetOrderItemByProductIdAsync(productId);
         }

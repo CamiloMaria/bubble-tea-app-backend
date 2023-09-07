@@ -13,9 +13,9 @@ namespace BubbleTea.Application.Services
             this._paymentMethodRepository = paymentMethodRepository;
         }
 
-        public async Task<Response<IEnumerable<PaymentMethod>>> GetAllPaymentMethod(int page, int pageSize)
+        public async Task<Response<IEnumerable<PaymentMethod>>> GetAllPaymentMethod()
         {
-            return await _paymentMethodRepository.GetAllPaymentMethodAsync(page, pageSize);
+            return await _paymentMethodRepository.GetAllPaymentMethodAsync();
         }
 
         public async Task<Response<PaymentMethod>> GetPaymentMethodById(int id)
@@ -38,7 +38,7 @@ namespace BubbleTea.Application.Services
             return await _paymentMethodRepository.DeletePaymentMethodAsync(id);
         }
 
-        public async Task<Response<PaymentMethod>> GetPaymentMethodByOrderId(int orderId)
+        public async Task<Response<IEnumerable<PaymentMethod>>> GetPaymentMethodByOrderId(int orderId)
         {
             return await _paymentMethodRepository.GetPaymentMethodByOrderIdAsync(orderId);
         }

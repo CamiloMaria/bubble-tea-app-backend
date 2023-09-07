@@ -39,22 +39,20 @@ namespace BubbleTea.Infrastructure.Repositories
                         var response = new Response<IEnumerable<ProductTopping>>(message, 404, "Not Found");
                         response.AddError(message);
                         return response;
-                    case { }:
-                        break;
+                    default:
+                        return new Response<IEnumerable<ProductTopping>>
+                        {
+                            Data = pagedProductTopping,
+                            Page = page,
+                            PageSize = pageSize,
+                            TotalCount = totalProductTopping,
+                            TotalPages = (int)Math.Ceiling((double)totalProductTopping / pageSize),
+                            Success = true,
+                            Message = "Se obtuvo satisfactoriamente los productos con topping",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
-
-                return new Response<IEnumerable<ProductTopping>>
-                {
-                    Data = pagedProductTopping,
-                    Page = page,
-                    PageSize = pageSize,
-                    TotalCount = totalProductTopping,
-                    TotalPages = (int)Math.Ceiling((double)totalProductTopping / pageSize),
-                    Success = true,
-                    Message = "Se obtuvo satisfactoriamente los productos con topping",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {
@@ -88,17 +86,15 @@ namespace BubbleTea.Infrastructure.Repositories
                         var response = new Response<ProductTopping>(message, 404, "Not Found");
                         response.AddError(message);
                         return response;
-                    case { }:
-                        break;
+                    default:
+                        return new Response<ProductTopping>
+                        {
+                            Data = productTopping,
+                            Message = $"Se obtuvo satisfactoriamente el producto con topping con id {id}",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
-
-                return new Response<ProductTopping>
-                {
-                    Data = productTopping,
-                    Message = $"Se obtuvo satisfactoriamente el producto con topping con id {id}",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {
@@ -138,20 +134,20 @@ namespace BubbleTea.Infrastructure.Repositories
                         response = new Response<ProductTopping>(message, 400, "BadRequest");
                         response.AddError(message);
                         return response;
-                    case { }:
-                        break;
+                    default:
+                        await _dbContext.ProductToppings.AddAsync(productTopping);
+                        await _dbContext.SaveChangesAsync();
+
+                        _cache.Remove(_cacheKey);
+
+                        return new Response<ProductTopping>
+                        {
+                            Data = productTopping,
+                            Message = $"Se creó satisfactoriamente el producto con topping con id {productTopping.Id}",
+                            StatusCode = 201,
+                            ReasonPhrase = "Created"
+                        };
                 }
-
-                await _dbContext.ProductToppings.AddAsync(productTopping);
-                await _dbContext.SaveChangesAsync();
-
-                return new Response<ProductTopping>
-                {
-                    Data = productTopping,
-                    Message = $"Se creó satisfactoriamente el producto con topping con id {productTopping.Id}",
-                    StatusCode = 201,
-                    ReasonPhrase = "Created"
-                };
             }
             catch (Exception ex)
             {
@@ -190,21 +186,21 @@ namespace BubbleTea.Infrastructure.Repositories
                         response = new Response<ProductTopping>(message, 400, "BadRequest");
                         response.AddError(message);
                         return response;
-                    case { }:
-                        break;
+                    default:
+                    _dbContext.Entry(existingProductTopping).State = EntityState.Detached;
+                    _dbContext.Entry(productTopping).State = EntityState.Modified;
+                    await _dbContext.SaveChangesAsync();
+
+                    _cache.Remove(_cacheKey);
+
+                    return new Response<ProductTopping>
+                    {
+                        Data = productTopping,
+                        Message = $"Se actualizó satisfactoriamente el producto con topping con id {productTopping.Id}",
+                        StatusCode = 200,
+                        ReasonPhrase = "Ok"
+                    };
                 }
-
-                _dbContext.Entry(existingProductTopping).State = EntityState.Detached;
-                _dbContext.Entry(productTopping).State = EntityState.Modified;
-                await _dbContext.SaveChangesAsync();
-
-                return new Response<ProductTopping>
-                {
-                    Data = productTopping,
-                    Message = $"Se actualizó satisfactoriamente el producto con topping con id {productTopping.Id}",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {
@@ -238,20 +234,20 @@ namespace BubbleTea.Infrastructure.Repositories
                         var response = new Response<ProductTopping>(message, 404, "Not Found");
                         response.AddError(message);
                         return response;
-                    case { }:
-                        break;
+                    default:
+                        _dbContext.ProductToppings.Remove(productTopping);
+                        await _dbContext.SaveChangesAsync();
+
+                        _cache.Remove(_cacheKey);
+
+                        return new Response<ProductTopping>
+                        {
+                            Data = productTopping,
+                            Message = $"Se eliminó satisfactoriamente el producto con topping con id {id}",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
-
-                _dbContext.ProductToppings.Remove(productTopping);
-                await _dbContext.SaveChangesAsync();
-
-                return new Response<ProductTopping>
-                {
-                    Data = productTopping,
-                    Message = $"Se eliminó satisfactoriamente el producto con topping con id {id}",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {
@@ -285,17 +281,16 @@ namespace BubbleTea.Infrastructure.Repositories
                         var response = new Response<ProductTopping>(message, 404, "Not Found");
                         response.AddError(message);
                         return response;
-                    case { }:
-                        break;
+                    default:
+                        return new Response<ProductTopping>
+                        {
+                            Data = productTopping,
+                            Success = true,
+                            Message = $"Se obtuvo satisfactoriamente el producto con topping con producto id {productId}",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
-
-                return new Response<ProductTopping>
-                {
-                    Data = productTopping,
-                    Message = $"Se obtuvo satisfactoriamente el producto con topping con producto id {productId}",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {
@@ -330,17 +325,15 @@ namespace BubbleTea.Infrastructure.Repositories
                         var response = new Response<ProductTopping>(message, 404, "Not Found");
                         response.AddError(message);
                         return response;
-                    case { }:
-                        break;
+                    default:
+                        return new Response<ProductTopping>
+                        {
+                            Data = productTopping,
+                            Message = $"Se obtuvo satisfactoriamente el producto con topping con topping id {toppingId}",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
-
-                return new Response<ProductTopping>
-                {
-                    Data = productTopping,
-                    Message = $"Se obtuvo satisfactoriamente el producto con topping con topping id {toppingId}",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {

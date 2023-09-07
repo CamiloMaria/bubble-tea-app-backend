@@ -9,7 +9,7 @@ namespace BubbleTea.Application.Interfaces
         Task<Response<Image>> CreateImage(Image image);
         Task<Response<Image>> UpdateImage(Image image);
         Task<Response<Image>> DeleteImage(int id);
-        Task<Response<Image>> GetImageByProductId(int productId);
+        Task<Response<IEnumerable<Image>>> GetImageByProductId(int productId);
         Task<Response<Image>> GetImageByUserId(int userId);
     }
 }

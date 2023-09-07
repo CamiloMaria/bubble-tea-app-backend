@@ -38,7 +38,7 @@ namespace BubbleTea.Application.Services
             return await _imageRepository.DeleteImageAsync(id);
         }
 
-        public async Task<Response<Image>> GetImageByProductId(int productId)
+        public async Task<Response<IEnumerable<Image>>> GetImageByProductId(int productId)
         {
             return await _imageRepository.GetImageByProductIdAsync(productId);
         }

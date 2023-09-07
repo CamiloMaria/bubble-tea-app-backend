@@ -9,7 +9,7 @@ namespace BubbleTea.Domain.Interfaces
         Task<Response<OrderItem>> CreateOrderItemAsync(OrderItem orderItem);
         Task<Response<OrderItem>> UpdateOrderItemAsync(OrderItem orderItem);
         Task<Response<OrderItem>> DeleteOrderItemAsync(int id);
-        Task<Response<OrderItem>> GetOrderItemByOrderIdAsync(int orderId);
-        Task<Response<OrderItem>> GetOrderItemByProductIdAsync(int productId);
+        Task<Response<IEnumerable<OrderItem>>> GetOrderItemByOrderIdAsync(int orderId);
+        Task<Response<IEnumerable<OrderItem>>> GetOrderItemByProductIdAsync(int productId);
     }
 }

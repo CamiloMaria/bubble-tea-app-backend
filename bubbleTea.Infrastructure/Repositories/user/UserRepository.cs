@@ -39,20 +39,20 @@ namespace BubbleTea.Infrastructure.Repositories
                         var response = new Response<IEnumerable<User>>(message, 404, "Not Found");
                         response.AddError(message);
                         return response;
+                    default:
+                        return new Response<IEnumerable<User>>
+                        {
+                            Data = pagedUsers,
+                            Page = page,
+                            PageSize = pageSize,
+                            TotalCount = totalUsers,
+                            TotalPages = (int)Math.Ceiling((double)totalUsers / pageSize),
+                            Success = true,
+                            Message = $"Se obtuvo satisfactoriamente los usuarios",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
-
-                return new Response<IEnumerable<User>>
-                {
-                    Data = pagedUsers,
-                    Page = page,
-                    PageSize = pageSize,
-                    TotalCount = totalUsers,
-                    TotalPages = (int)Math.Ceiling((double)totalUsers / pageSize),
-                    Success = true,
-                    Message = $"Se obtuvo satisfactoriamente los usuarios",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {
@@ -86,18 +86,16 @@ namespace BubbleTea.Infrastructure.Repositories
                         var response = new Response<User>(message, 404, "Not Found");
                         response.AddError(message);
                         return response;
-                    case { Id: var userId } when userId == id:
-                        break;
+                    default:
+                        return new Response<User>
+                        {
+                            Data = user,
+                            Success = true,
+                            Message = $"Se obtuvo satisfactoriamente el usuario con id: {id}",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
-
-                return new Response<User>
-                {
-                    Data = user,
-                    Success = true,
-                    Message = $"Se obtuvo satisfactoriamente el usuario con id: {id}",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {
@@ -131,19 +129,21 @@ namespace BubbleTea.Infrastructure.Repositories
                         var response = new Response<User>(message, 400, "Bad Request");
                         response.AddError(message);
                         return response;
+                    default:
+                        await _dbContext.Users.AddAsync(user);
+                        await _dbContext.SaveChangesAsync();
+
+                        _cache.Remove(_cacheKey);
+
+                        return new Response<User>
+                        {
+                            Data = user,
+                            Success = true,
+                            Message = $"Se creo satisfactoriamente el usuario con correo: {user.Email}",
+                            StatusCode = 201,
+                            ReasonPhrase = "Created"
+                        };
                 }
-
-                await _dbContext.Users.AddAsync(user);
-                await _dbContext.SaveChangesAsync();
-
-                return new Response<User>
-                {
-                    Data = user,
-                    Success = true,
-                    Message = $"Se creo satisfactoriamente el usuario con correo: {user.Email}",
-                    StatusCode = 201,
-                    ReasonPhrase = "Created"
-                };
             }
             catch (Exception ex)
             {
@@ -182,22 +182,23 @@ namespace BubbleTea.Infrastructure.Repositories
                         response = new Response<User>(message, 400, "Bad Request");
                         response.AddError(message);
                         return response;
-                    case { Id: var userId } when userId == user.Id:
-                        break;
+                    default:
+                        _dbContext.Entry(existingUser).State = EntityState.Detached;
+                        _dbContext.Entry(user).State = EntityState.Modified;
+                        await _dbContext.SaveChangesAsync();
+
+                        _cache.Remove(_cacheKey);
+
+                        return new Response<User>
+                        {
+                            Data = existingUser,
+                            Success = true,
+                            Message = $"Se actualizo satisfactoriamente el usuario con id: {user.Id}",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
 
-                _dbContext.Entry(existingUser).State = EntityState.Detached;
-                _dbContext.Entry(user).State = EntityState.Modified;
-                await _dbContext.SaveChangesAsync();
-
-                return new Response<User>
-                {
-                    Data = existingUser,
-                    Success = true,
-                    Message = $"Se actualizo satisfactoriamente el usuario con id: {user.Id}",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {
@@ -241,21 +242,21 @@ namespace BubbleTea.Infrastructure.Repositories
                         response = new Response<User>(message, 400, "Bad Request");
                         response.AddError(message);
                         return response;
-                    case { Id: var userId } when userId == id:
-                        break;
+                    default:
+                        _dbContext.Users.Remove(existingUser);
+                        await _dbContext.SaveChangesAsync();
+
+                        _cache.Remove(_cacheKey);
+
+                        return new Response<User>
+                        {
+                            Data = existingUser,
+                            Success = true,
+                            Message = $"Se elimino satisfactoriamente el usuario con id: {id}",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
-
-                _dbContext.Users.Remove(existingUser);
-                await _dbContext.SaveChangesAsync();
-
-                return new Response<User>
-                {
-                    Data = existingUser,
-                    Success = true,
-                    Message = $"Se elimino satisfactoriamente el usuario con id: {id}",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {
@@ -299,18 +300,16 @@ namespace BubbleTea.Infrastructure.Repositories
                         response = new Response<User>(message, 400, "Bad Request");
                         response.AddError(message);
                         return response;
-                    case { }:
-                        break;
+                    default:
+                        return new Response<User>
+                        {
+                            Data = user,
+                            Success = true,
+                            Message = $"Se inicio sesión satisfactoriamente",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
-
-                return new Response<User>
-                {
-                    Data = user,
-                    Success = true,
-                    Message = $"Se inicio sesión satisfactoriamente",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {
@@ -344,21 +343,21 @@ namespace BubbleTea.Infrastructure.Repositories
                         var response = new Response<User>(message, 400, "Bad Request");
                         response.AddError(message);
                         return response;
-                    case { }:
-                        break;
+                    default:
+                    await _dbContext.Users.AddAsync(user);
+                    await _dbContext.SaveChangesAsync();
+
+                    _cache.Remove(_cacheKey);
+
+                    return new Response<User>
+                    {
+                        Data = user,
+                        Success = true,
+                        Message = "Se registro satisfactoriamente el usuario",
+                        StatusCode = 201,
+                        ReasonPhrase = "Created"
+                    };
                 }
-
-                await _dbContext.Users.AddAsync(user);
-                await _dbContext.SaveChangesAsync();
-
-                return new Response<User>
-                {
-                    Data = user,
-                    Success = true,
-                    Message = "Se registro satisfactoriamente el usuario",
-                    StatusCode = 201,
-                    ReasonPhrase = "Created"
-                };
             }
             catch (Exception ex)
             {
@@ -397,22 +396,22 @@ namespace BubbleTea.Infrastructure.Repositories
                         response = new Response<User>(message, 400, "Bad Request");
                         response.AddError(message);
                         return response;
-                    case { }:
-                        break;
+                    default:
+                        existingUser.Password = newPassword;
+
+                        await _dbContext.SaveChangesAsync();
+
+                        _cache.Remove(_cacheKey);
+
+                        return new Response<User>
+                        {
+                            Data = existingUser,
+                            Success = true,
+                            Message = $"Se actualizo satisfactoriamente el usuario con id: {id}",
+                            StatusCode = 200,
+                            ReasonPhrase = "Ok"
+                        };
                 }
-
-                existingUser.Password = newPassword;
-
-                await _dbContext.SaveChangesAsync();
-
-                return new Response<User>
-                {
-                    Data = existingUser,
-                    Success = true,
-                    Message = $"Se actualizo satisfactoriamente el usuario con id: {id}",
-                    StatusCode = 200,
-                    ReasonPhrase = "Ok"
-                };
             }
             catch (Exception ex)
             {
@@ -427,6 +426,5 @@ namespace BubbleTea.Infrastructure.Repositories
             };
         }
     }
-
 }
 

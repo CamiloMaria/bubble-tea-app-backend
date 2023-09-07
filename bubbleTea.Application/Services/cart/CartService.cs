@@ -4,7 +4,7 @@ using BubbleTea.Application.Interfaces;
 
 namespace BubbleTea.Application.Services
 {
-    public class CartService : ICartServivce
+    public class CartService : ICartService
     {
         private readonly ICartRepository _cartRepository;
 

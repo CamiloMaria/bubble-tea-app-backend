@@ -2,7 +2,7 @@ using BubbleTea.Domain.Entities;
 
 namespace BubbleTea.Application.Interfaces
 {
-    public interface ICartServivce
+    public interface ICartService
     {
         Task<Response<IEnumerable<Cart>>> GetAllCart(int page, int pageSize);
         Task<Response<Cart>> GetCartById(int id);

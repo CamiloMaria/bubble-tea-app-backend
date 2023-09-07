@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using BubbleTea.Application.Interfaces;
 using BubbleTea.Domain.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.AspNetCore.Authorization;
 
 namespace BubbleTea.API.Controllers

@@ -7,20 +7,15 @@ namespace BubbleTea.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class PaymentMethodController : Controller
     {
-        private readonly IUserService _service;
-
-        public UserController(IUserService service)
-        {
-            _service = service;
-        }
+        private readonly IPaymentMethodService _paymentMethodService;
+        public PaymentMethodController(IPaymentMethodService paymentMethodService) => _paymentMethodService = paymentMethodService;
 
         [HttpGet]
-        // [Authorize]
-        public async Task<IActionResult> GetAllUser(int page, int pageSize)
+        public async Task<IActionResult> GetAllPaymentMethod(int page, int pageSize)
         {
-            var response = new Response<IEnumerable<User>>();
+            var response = new Response<IEnumerable<PaymentMethod>>();
 
             if (!ModelState.IsValid)
             {
@@ -37,11 +32,12 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var users = await _service.GetAllUser(page, pageSize);
+                var paymentMethods = await _paymentMethodService.GetAllPaymentMethod();
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = users.Data;
+                response.Message = "Get all payment method successfully!";
+                response.Data = paymentMethods.Data;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -56,10 +52,9 @@ namespace BubbleTea.API.Controllers
         }
 
         [HttpGet("{id}")]
-        // [Authorize]
-        public async Task<IActionResult> GetUserById(int id)
+        public async Task<IActionResult> GetPaymentMethodById(int id)
         {
-            var response = new Response<User>();
+            var response = new Response<PaymentMethod>();
 
             if (!ModelState.IsValid)
             {
@@ -76,11 +71,12 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var user = await _service.GetUserById(id);
+                var paymentMethod = await _paymentMethodService.GetPaymentMethodById(id);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = user.Data;
+                response.Message = "Get payment method by id successfully!";
+                response.Data = paymentMethod.Data;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -95,10 +91,9 @@ namespace BubbleTea.API.Controllers
         }
 
         [HttpPost]
-        // [Authorize]
-        public async Task<IActionResult> CreateUser(User user)
+        public async Task<IActionResult> CreatePaymentMethod([FromBody] PaymentMethod paymentMethod)
         {
-            var response = new Response<User>();
+            var response = new Response<PaymentMethod>();
 
             if (!ModelState.IsValid)
             {
@@ -115,11 +110,12 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var newUser = await _service.CreateUser(user);
+                var newPaymentMethod = await _paymentMethodService.CreatePaymentMethod(paymentMethod);
                 response.Success = true;
-                response.StatusCode = 200;
-                response.ReasonPhrase = "OK";
-                response.Data = newUser.Data;
+                response.StatusCode = 201;
+                response.ReasonPhrase = "Created";
+                response.Message = "Create user successfully!";
+                response.Data = newPaymentMethod.Data;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -134,10 +130,9 @@ namespace BubbleTea.API.Controllers
         }
 
         [HttpPut("{id}")]
-        // [Authorize]
-        public async Task<IActionResult> UpdateUser(int id, User user)
+        public async Task<IActionResult> UpdatePaymentMethod(int id, [FromBody] PaymentMethod paymentMethod)
         {
-            var response = new Response<User>();
+            var response = new Response<PaymentMethod>();
 
             if (!ModelState.IsValid)
             {
@@ -154,11 +149,13 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var updatedUser = await _service.UpdateUser(user);
+                paymentMethod.Id = id;
+                var paymentMethodUpdated = await _paymentMethodService.UpdatePaymentMethod(paymentMethod);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = updatedUser.Data;
+                response.Message = "Update user successfully!";
+                response.Data = paymentMethodUpdated.Data;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -173,10 +170,9 @@ namespace BubbleTea.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        // [Authorize]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeletePaymentMethod(int id)
         {
-            var response = new Response<User>();
+            var response = new Response<PaymentMethod>();
 
             if (!ModelState.IsValid)
             {
@@ -193,7 +189,7 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                await _service.DeleteUser(id);
+                await _paymentMethodService.DeletePaymentMethod(id);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
@@ -211,116 +207,39 @@ namespace BubbleTea.API.Controllers
             }
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(string email, string password)
+        [HttpGet("order/{orderId}")]
+        public async Task<IActionResult> GetPaymentMethodByOrderId(int orderId)
         {
-            var response = new Response<User>();
+            var response = new Response<IEnumerable<PaymentMethod>>();
 
             if (!ModelState.IsValid)
             {
                 response.Success = false;
                 response.StatusCode = 400;
                 response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
+                response.Message = "Invalid payment method data";
                 response.Errors = ModelState.Values
                     .SelectMany(x => x.Errors)
                     .Select(xx => xx.ErrorMessage)
                     .ToList();
                 return BadRequest(response);
             }
-
             try
             {
-                var userLogin = await _service.LoginUser(email, password );
+                var paymentMethods = await _paymentMethodService.GetPaymentMethodByOrderId(orderId);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = userLogin.Data;
+                response.Message = "Get payment method by order id successfully!";
+                response.Data = paymentMethods.Data;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
             {
                 response.Success = false;
-                response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
-                response.Message = "Login failed!";
-                response.AddError(ex.Message);
-                return StatusCode(response.StatusCode, response);
-            }
-        }
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(User user)
-        {
-            var response = new Response<User>();
-
-            if (!ModelState.IsValid)
-            {
-                response.Success = false;
-                response.StatusCode = 400;
-                response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
-                response.Errors = ModelState.Values
-                    .SelectMany(x => x.Errors)
-                    .Select(xx => xx.ErrorMessage)
-                    .ToList();
-                return BadRequest(response);
-            }
-
-            try
-            {
-                var newUser = await _service.RegisterUser(user);
-                response.Success = true;
-                response.StatusCode = 200;
-                response.ReasonPhrase = "OK";
-                response.Data = newUser.Data;
-                return StatusCode(response.StatusCode, response);
-            }
-            catch (Exception ex)
-            {
-                response.Success = false;
-                response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
-                response.Message = "Register failed!";
-                response.AddError(ex.Message);
-                return StatusCode(response.StatusCode, response);
-            }
-        }
-
-        [HttpPatch("change-password/{id}")]
-        [Authorize]
-        public async Task<IActionResult> ChangePassword(int id, string oldPassword, string newPassword)
-        {
-            var response = new Response<User>();
-
-            if (!ModelState.IsValid)
-            {
-                response.Success = false;
-                response.StatusCode = 400;
-                response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
-                response.Errors = ModelState.Values
-                    .SelectMany(x => x.Errors)
-                    .Select(xx => xx.ErrorMessage)
-                    .ToList();
-                return BadRequest(response);
-            }
-
-            try
-            {
-                await _service.UpdateUserPassword(id, oldPassword, newPassword);
-                response.Success = true;
-                response.StatusCode = 200;
-                response.ReasonPhrase = "OK";
-                response.Message = "Change password successfully!";
-                return StatusCode(response.StatusCode, response);
-            }
-            catch (Exception ex)
-            {
-                response.Success = false;
-                response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
-                response.Message = "Change password failed!";
+                response.StatusCode = 500;
+                response.ReasonPhrase = "Internal Server Error";
+                response.Message = $"Get payment method by order id {orderId} failed!";
                 response.AddError(ex.Message);
                 return StatusCode(response.StatusCode, response);
             }

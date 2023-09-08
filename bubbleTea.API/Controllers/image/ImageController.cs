@@ -7,20 +7,15 @@ namespace BubbleTea.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class ImageController : ControllerBase
     {
-        private readonly IUserService _service;
-
-        public UserController(IUserService service)
-        {
-            _service = service;
-        }
+        private readonly IImageService _imageService;
+        public ImageController(IImageService imageService) => _imageService = imageService;
 
         [HttpGet]
-        // [Authorize]
-        public async Task<IActionResult> GetAllUser(int page, int pageSize)
+        public async Task<IActionResult> GetAllImage(int page, int pageSize)
         {
-            var response = new Response<IEnumerable<User>>();
+            var response = new Response<IEnumerable<Image>>();
 
             if (!ModelState.IsValid)
             {
@@ -37,11 +32,12 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var users = await _service.GetAllUser(page, pageSize);
+                var images = await _imageService.GetAllImage(page, pageSize);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = users.Data;
+                response.Message = "Get all image successfully!";
+                response.Data = images.Data;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -49,17 +45,16 @@ namespace BubbleTea.API.Controllers
                 response.Success = false;
                 response.StatusCode = 500;
                 response.ReasonPhrase = "Internal Server Error";
-                response.Message = "Get all user failed!";
+                response.Message = "Get all image failed!";
                 response.AddError(ex.Message);
                 return StatusCode(response.StatusCode, response);
             }
         }
 
         [HttpGet("{id}")]
-        // [Authorize]
-        public async Task<IActionResult> GetUserById(int id)
+        public async Task<IActionResult> GetImageById(int id)
         {
-            var response = new Response<User>();
+            var response = new Response<Image>();
 
             if (!ModelState.IsValid)
             {
@@ -76,11 +71,12 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var user = await _service.GetUserById(id);
+                var image = await _imageService.GetImageById(id);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = user.Data;
+                response.Message = "Get image by id successfully!";
+                response.Data = image.Data;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -88,24 +84,23 @@ namespace BubbleTea.API.Controllers
                 response.Success = false;
                 response.StatusCode = 500;
                 response.ReasonPhrase = "Internal Server Error";
-                response.Message = "Get user by id failed!";
+                response.Message = "Get image by id failed!";
                 response.AddError(ex.Message);
                 return StatusCode(response.StatusCode, response);
             }
         }
 
         [HttpPost]
-        // [Authorize]
-        public async Task<IActionResult> CreateUser(User user)
+        public async Task<IActionResult> CreateImage([FromBody] Image image)
         {
-            var response = new Response<User>();
+            var response = new Response<Image>();
 
             if (!ModelState.IsValid)
             {
                 response.Success = false;
                 response.StatusCode = 400;
                 response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
+                response.Message = "Invalid image data";
                 response.Errors = ModelState.Values
                     .SelectMany(x => x.Errors)
                     .Select(xx => xx.ErrorMessage)
@@ -115,11 +110,12 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var newUser = await _service.CreateUser(user);
+                await _imageService.CreateImage(image);
                 response.Success = true;
-                response.StatusCode = 200;
-                response.ReasonPhrase = "OK";
-                response.Data = newUser.Data;
+                response.StatusCode = 201;
+                response.ReasonPhrase = "Created";
+                response.Message = "Create image successfully!";
+                response.Data = image;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -127,24 +123,23 @@ namespace BubbleTea.API.Controllers
                 response.Success = false;
                 response.StatusCode = 500;
                 response.ReasonPhrase = "Internal Server Error";
-                response.Message = "Create user failed!";
+                response.Message = "Create image failed!";
                 response.AddError(ex.Message);
                 return StatusCode(response.StatusCode, response);
             }
         }
 
         [HttpPut("{id}")]
-        // [Authorize]
-        public async Task<IActionResult> UpdateUser(int id, User user)
+        public async Task<IActionResult> UpdateImage(int id, [FromBody] Image image)
         {
-            var response = new Response<User>();
+            var response = new Response<Image>();
 
             if (!ModelState.IsValid)
             {
                 response.Success = false;
                 response.StatusCode = 400;
                 response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
+                response.Message = "Invalid image data";
                 response.Errors = ModelState.Values
                     .SelectMany(x => x.Errors)
                     .Select(xx => xx.ErrorMessage)
@@ -152,13 +147,23 @@ namespace BubbleTea.API.Controllers
                 return BadRequest(response);
             }
 
+            if (id != image.Id)
+            {
+                response.Success = false;
+                response.StatusCode = 400;
+                response.ReasonPhrase = "Bad Request";
+                response.Message = "Image id not match!";
+                return BadRequest(response);
+            }
+
             try
             {
-                var updatedUser = await _service.UpdateUser(user);
+                await _imageService.UpdateImage(image);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = updatedUser.Data;
+                response.Message = "Update image successfully!";
+                response.Data = image;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -166,24 +171,23 @@ namespace BubbleTea.API.Controllers
                 response.Success = false;
                 response.StatusCode = 500;
                 response.ReasonPhrase = "Internal Server Error";
-                response.Message = "Update user failed!";
+                response.Message = "Update image failed!";
                 response.AddError(ex.Message);
                 return StatusCode(response.StatusCode, response);
             }
         }
 
         [HttpDelete("{id}")]
-        // [Authorize]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeleteImage(int id)
         {
-            var response = new Response<User>();
+            var response = new Response<Image>();
 
             if (!ModelState.IsValid)
             {
                 response.Success = false;
                 response.StatusCode = 400;
                 response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
+                response.Message = "Invalid image data";
                 response.Errors = ModelState.Values
                     .SelectMany(x => x.Errors)
                     .Select(xx => xx.ErrorMessage)
@@ -193,11 +197,11 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                await _service.DeleteUser(id);
+                await _imageService.DeleteImage(id);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Message = "Delete user successfully!";
+                response.Message = "Delete image successfully!";
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -205,23 +209,23 @@ namespace BubbleTea.API.Controllers
                 response.Success = false;
                 response.StatusCode = 500;
                 response.ReasonPhrase = "Internal Server Error";
-                response.Message = "Delete user failed!";
+                response.Message = "Delete image failed!";
                 response.AddError(ex.Message);
                 return StatusCode(response.StatusCode, response);
             }
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(string email, string password)
+        [HttpGet("product/{productId}")]
+        public async Task<IActionResult> GetImageByProductId(int productId)
         {
-            var response = new Response<User>();
+            var response = new Response<IEnumerable<Image>>();
 
             if (!ModelState.IsValid)
             {
                 response.Success = false;
                 response.StatusCode = 400;
                 response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
+                response.Message = "Invalid image data";
                 response.Errors = ModelState.Values
                     .SelectMany(x => x.Errors)
                     .Select(xx => xx.ErrorMessage)
@@ -231,35 +235,36 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var userLogin = await _service.LoginUser(email, password );
+                var images = await _imageService.GetImageByProductId(productId);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = userLogin.Data;
+                response.Message = "Get image by product id successfully!";
+                response.Data = images.Data;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
             {
                 response.Success = false;
-                response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
-                response.Message = "Login failed!";
+                response.StatusCode = 500;
+                response.ReasonPhrase = "Internal Server Error";
+                response.Message = "Get image by product id failed!";
                 response.AddError(ex.Message);
                 return StatusCode(response.StatusCode, response);
             }
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(User user)
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetImageByUserId(int userId)
         {
-            var response = new Response<User>();
+            var response = new Response<Image>();
 
             if (!ModelState.IsValid)
             {
                 response.Success = false;
                 response.StatusCode = 400;
                 response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
+                response.Message = "Invalid image data";
                 response.Errors = ModelState.Values
                     .SelectMany(x => x.Errors)
                     .Select(xx => xx.ErrorMessage)
@@ -269,58 +274,20 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var newUser = await _service.RegisterUser(user);
+                var image = await _imageService.GetImageByUserId(userId);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = newUser.Data;
+                response.Message = "Get image by user id successfully!";
+                response.Data = image.Data;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
             {
                 response.Success = false;
-                response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
-                response.Message = "Register failed!";
-                response.AddError(ex.Message);
-                return StatusCode(response.StatusCode, response);
-            }
-        }
-
-        [HttpPatch("change-password/{id}")]
-        [Authorize]
-        public async Task<IActionResult> ChangePassword(int id, string oldPassword, string newPassword)
-        {
-            var response = new Response<User>();
-
-            if (!ModelState.IsValid)
-            {
-                response.Success = false;
-                response.StatusCode = 400;
-                response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
-                response.Errors = ModelState.Values
-                    .SelectMany(x => x.Errors)
-                    .Select(xx => xx.ErrorMessage)
-                    .ToList();
-                return BadRequest(response);
-            }
-
-            try
-            {
-                await _service.UpdateUserPassword(id, oldPassword, newPassword);
-                response.Success = true;
-                response.StatusCode = 200;
-                response.ReasonPhrase = "OK";
-                response.Message = "Change password successfully!";
-                return StatusCode(response.StatusCode, response);
-            }
-            catch (Exception ex)
-            {
-                response.Success = false;
-                response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
-                response.Message = "Change password failed!";
+                response.StatusCode = 500;
+                response.ReasonPhrase = "Internal Server Error";
+                response.Message = "Get image by user id failed!";
                 response.AddError(ex.Message);
                 return StatusCode(response.StatusCode, response);
             }

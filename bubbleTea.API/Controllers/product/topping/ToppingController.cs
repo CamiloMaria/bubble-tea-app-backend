@@ -7,20 +7,15 @@ namespace BubbleTea.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class ToppingController: ControllerBase
     {
-        private readonly IUserService _service;
-
-        public UserController(IUserService service)
-        {
-            _service = service;
-        }
+        private readonly IToppingService _toppingService;
+        public ToppingController(IToppingService toppingService) => _toppingService = toppingService;
 
         [HttpGet]
-        // [Authorize]
-        public async Task<IActionResult> GetAllUser(int page, int pageSize)
+        public async Task<IActionResult> GetAllTopping(int page, int pageSize)
         {
-            var response = new Response<IEnumerable<User>>();
+            var response = new Response<IEnumerable<Topping>>();
 
             if (!ModelState.IsValid)
             {
@@ -37,11 +32,11 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var users = await _service.GetAllUser(page, pageSize);
+                var toppings = await _toppingService.GetAllTopping(page, pageSize);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = users.Data;
+                response.Data = toppings.Data;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -56,10 +51,9 @@ namespace BubbleTea.API.Controllers
         }
 
         [HttpGet("{id}")]
-        // [Authorize]
-        public async Task<IActionResult> GetUserById(int id)
+        public async Task<IActionResult> GetToppingById(int id)
         {
-            var response = new Response<User>();
+            var response = new Response<Topping>();
 
             if (!ModelState.IsValid)
             {
@@ -76,11 +70,11 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var user = await _service.GetUserById(id);
+                var topping = await _toppingService.GetToppingById(id);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = user.Data;
+                response.Data = topping.Data;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -95,10 +89,9 @@ namespace BubbleTea.API.Controllers
         }
 
         [HttpPost]
-        // [Authorize]
-        public async Task<IActionResult> CreateUser(User user)
+        public async Task<IActionResult> CreateTopping(Topping topping)
         {
-            var response = new Response<User>();
+            var response = new Response<Topping>();
 
             if (!ModelState.IsValid)
             {
@@ -115,11 +108,11 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var newUser = await _service.CreateUser(user);
+                var newTopping = await _toppingService.CreateTopping(topping);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = newUser.Data;
+                response.Data = newTopping.Data;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -134,10 +127,9 @@ namespace BubbleTea.API.Controllers
         }
 
         [HttpPut("{id}")]
-        // [Authorize]
-        public async Task<IActionResult> UpdateUser(int id, User user)
+        public async Task<IActionResult> UpdateTopping(int id, Topping topping)
         {
-            var response = new Response<User>();
+            var response = new Response<Topping>();
 
             if (!ModelState.IsValid)
             {
@@ -154,11 +146,12 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var updatedUser = await _service.UpdateUser(user);
+                await _toppingService.UpdateTopping(topping);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = updatedUser.Data;
+                response.Message = "Update user successfully!";
+                response.Data = topping;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -173,10 +166,9 @@ namespace BubbleTea.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        // [Authorize]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeleteTopping(int id)
         {
-            var response = new Response<User>();
+            var response = new Response<Topping>();
 
             if (!ModelState.IsValid)
             {
@@ -193,7 +185,7 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                await _service.DeleteUser(id);
+                await _toppingService.DeleteTopping(id);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
@@ -206,121 +198,6 @@ namespace BubbleTea.API.Controllers
                 response.StatusCode = 500;
                 response.ReasonPhrase = "Internal Server Error";
                 response.Message = "Delete user failed!";
-                response.AddError(ex.Message);
-                return StatusCode(response.StatusCode, response);
-            }
-        }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(string email, string password)
-        {
-            var response = new Response<User>();
-
-            if (!ModelState.IsValid)
-            {
-                response.Success = false;
-                response.StatusCode = 400;
-                response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
-                response.Errors = ModelState.Values
-                    .SelectMany(x => x.Errors)
-                    .Select(xx => xx.ErrorMessage)
-                    .ToList();
-                return BadRequest(response);
-            }
-
-            try
-            {
-                var userLogin = await _service.LoginUser(email, password );
-                response.Success = true;
-                response.StatusCode = 200;
-                response.ReasonPhrase = "OK";
-                response.Data = userLogin.Data;
-                return StatusCode(response.StatusCode, response);
-            }
-            catch (Exception ex)
-            {
-                response.Success = false;
-                response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
-                response.Message = "Login failed!";
-                response.AddError(ex.Message);
-                return StatusCode(response.StatusCode, response);
-            }
-        }
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(User user)
-        {
-            var response = new Response<User>();
-
-            if (!ModelState.IsValid)
-            {
-                response.Success = false;
-                response.StatusCode = 400;
-                response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
-                response.Errors = ModelState.Values
-                    .SelectMany(x => x.Errors)
-                    .Select(xx => xx.ErrorMessage)
-                    .ToList();
-                return BadRequest(response);
-            }
-
-            try
-            {
-                var newUser = await _service.RegisterUser(user);
-                response.Success = true;
-                response.StatusCode = 200;
-                response.ReasonPhrase = "OK";
-                response.Data = newUser.Data;
-                return StatusCode(response.StatusCode, response);
-            }
-            catch (Exception ex)
-            {
-                response.Success = false;
-                response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
-                response.Message = "Register failed!";
-                response.AddError(ex.Message);
-                return StatusCode(response.StatusCode, response);
-            }
-        }
-
-        [HttpPatch("change-password/{id}")]
-        [Authorize]
-        public async Task<IActionResult> ChangePassword(int id, string oldPassword, string newPassword)
-        {
-            var response = new Response<User>();
-
-            if (!ModelState.IsValid)
-            {
-                response.Success = false;
-                response.StatusCode = 400;
-                response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
-                response.Errors = ModelState.Values
-                    .SelectMany(x => x.Errors)
-                    .Select(xx => xx.ErrorMessage)
-                    .ToList();
-                return BadRequest(response);
-            }
-
-            try
-            {
-                await _service.UpdateUserPassword(id, oldPassword, newPassword);
-                response.Success = true;
-                response.StatusCode = 200;
-                response.ReasonPhrase = "OK";
-                response.Message = "Change password successfully!";
-                return StatusCode(response.StatusCode, response);
-            }
-            catch (Exception ex)
-            {
-                response.Success = false;
-                response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
-                response.Message = "Change password failed!";
                 response.AddError(ex.Message);
                 return StatusCode(response.StatusCode, response);
             }

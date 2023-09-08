@@ -7,20 +7,15 @@ namespace BubbleTea.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class LocationController : ControllerBase
     {
-        private readonly IUserService _service;
-
-        public UserController(IUserService service)
-        {
-            _service = service;
-        }
+        private readonly ILocationService _locationService;
+        public LocationController(ILocationService locationService) => _locationService = locationService;
 
         [HttpGet]
-        // [Authorize]
-        public async Task<IActionResult> GetAllUser(int page, int pageSize)
+        public async Task<IActionResult> GetAllLocation(int page, int pageSize)
         {
-            var response = new Response<IEnumerable<User>>();
+            var response = new Response<IEnumerable<Location>>();
 
             if (!ModelState.IsValid)
             {
@@ -37,11 +32,12 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var users = await _service.GetAllUser(page, pageSize);
+                var locations = await _locationService.GetAllLocation(page, pageSize);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = users.Data;
+                response.Message = "Get all location successfully!";
+                response.Data = locations.Data;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -49,17 +45,16 @@ namespace BubbleTea.API.Controllers
                 response.Success = false;
                 response.StatusCode = 500;
                 response.ReasonPhrase = "Internal Server Error";
-                response.Message = "Get all user failed!";
+                response.Message = "Get all location failed!";
                 response.AddError(ex.Message);
                 return StatusCode(response.StatusCode, response);
             }
         }
 
         [HttpGet("{id}")]
-        // [Authorize]
-        public async Task<IActionResult> GetUserById(int id)
+        public async Task<IActionResult> GetLocationById(int id)
         {
-            var response = new Response<User>();
+            var response = new Response<Location>();
 
             if (!ModelState.IsValid)
             {
@@ -76,11 +71,12 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var user = await _service.GetUserById(id);
+                var location = await _locationService.GetLocationById(id);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = user.Data;
+                response.Message = "Get location by id successfully!";
+                response.Data = location.Data;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -88,24 +84,23 @@ namespace BubbleTea.API.Controllers
                 response.Success = false;
                 response.StatusCode = 500;
                 response.ReasonPhrase = "Internal Server Error";
-                response.Message = "Get user by id failed!";
+                response.Message = "Get location by id failed!";
                 response.AddError(ex.Message);
                 return StatusCode(response.StatusCode, response);
             }
         }
 
         [HttpPost]
-        // [Authorize]
-        public async Task<IActionResult> CreateUser(User user)
+        public async Task<IActionResult> CreateLocation(Location location)
         {
-            var response = new Response<User>();
+            var response = new Response<Location>();
 
             if (!ModelState.IsValid)
             {
                 response.Success = false;
                 response.StatusCode = 400;
                 response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
+                response.Message = "Invalid location data";
                 response.Errors = ModelState.Values
                     .SelectMany(x => x.Errors)
                     .Select(xx => xx.ErrorMessage)
@@ -115,11 +110,12 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var newUser = await _service.CreateUser(user);
+                await _locationService.CreateLocation(location);
                 response.Success = true;
-                response.StatusCode = 200;
-                response.ReasonPhrase = "OK";
-                response.Data = newUser.Data;
+                response.StatusCode = 201;
+                response.ReasonPhrase = "Created";
+                response.Message = "Create location successfully!";
+                response.Data = location;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -127,24 +123,23 @@ namespace BubbleTea.API.Controllers
                 response.Success = false;
                 response.StatusCode = 500;
                 response.ReasonPhrase = "Internal Server Error";
-                response.Message = "Create user failed!";
+                response.Message = "Create location failed!";
                 response.AddError(ex.Message);
                 return StatusCode(response.StatusCode, response);
             }
         }
 
         [HttpPut("{id}")]
-        // [Authorize]
-        public async Task<IActionResult> UpdateUser(int id, User user)
+        public async Task<IActionResult> UpdateLocation(int id, Location location)
         {
-            var response = new Response<User>();
+            var response = new Response<Location>();
 
             if (!ModelState.IsValid)
             {
                 response.Success = false;
                 response.StatusCode = 400;
                 response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
+                response.Message = "Invalid location data";
                 response.Errors = ModelState.Values
                     .SelectMany(x => x.Errors)
                     .Select(xx => xx.ErrorMessage)
@@ -154,11 +149,12 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                var updatedUser = await _service.UpdateUser(user);
+                await _locationService.UpdateLocation(location);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = updatedUser.Data;
+                response.Message = "Update location successfully!";
+                response.Data = location;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -166,24 +162,23 @@ namespace BubbleTea.API.Controllers
                 response.Success = false;
                 response.StatusCode = 500;
                 response.ReasonPhrase = "Internal Server Error";
-                response.Message = "Update user failed!";
+                response.Message = "Update location failed!";
                 response.AddError(ex.Message);
                 return StatusCode(response.StatusCode, response);
             }
         }
 
         [HttpDelete("{id}")]
-        // [Authorize]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeleteLocation(int id)
         {
-            var response = new Response<User>();
+            var response = new Response<Location>();
 
             if (!ModelState.IsValid)
             {
                 response.Success = false;
                 response.StatusCode = 400;
                 response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
+                response.Message = "Invalid location data";
                 response.Errors = ModelState.Values
                     .SelectMany(x => x.Errors)
                     .Select(xx => xx.ErrorMessage)
@@ -193,11 +188,12 @@ namespace BubbleTea.API.Controllers
 
             try
             {
-                await _service.DeleteUser(id);
+                await _locationService.DeleteLocation(id);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Message = "Delete user successfully!";
+                response.Message = "Delete location successfully!";
+                response.Data = null;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -205,122 +201,33 @@ namespace BubbleTea.API.Controllers
                 response.Success = false;
                 response.StatusCode = 500;
                 response.ReasonPhrase = "Internal Server Error";
-                response.Message = "Delete user failed!";
+                response.Message = "Delete location failed!";
                 response.AddError(ex.Message);
                 return StatusCode(response.StatusCode, response);
             }
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(string email, string password)
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetLocationByUserId(int userId)
         {
-            var response = new Response<User>();
-
-            if (!ModelState.IsValid)
-            {
-                response.Success = false;
-                response.StatusCode = 400;
-                response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
-                response.Errors = ModelState.Values
-                    .SelectMany(x => x.Errors)
-                    .Select(xx => xx.ErrorMessage)
-                    .ToList();
-                return BadRequest(response);
-            }
+            var response = new Response<Location>();
 
             try
             {
-                var userLogin = await _service.LoginUser(email, password );
+                var location = await _locationService.GetLocationByUserId(userId);
                 response.Success = true;
                 response.StatusCode = 200;
                 response.ReasonPhrase = "OK";
-                response.Data = userLogin.Data;
+                response.Message = "Get location by user id successfully!";
+                response.Data = location.Data;
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
             {
                 response.Success = false;
-                response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
-                response.Message = "Login failed!";
-                response.AddError(ex.Message);
-                return StatusCode(response.StatusCode, response);
-            }
-        }
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(User user)
-        {
-            var response = new Response<User>();
-
-            if (!ModelState.IsValid)
-            {
-                response.Success = false;
-                response.StatusCode = 400;
-                response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
-                response.Errors = ModelState.Values
-                    .SelectMany(x => x.Errors)
-                    .Select(xx => xx.ErrorMessage)
-                    .ToList();
-                return BadRequest(response);
-            }
-
-            try
-            {
-                var newUser = await _service.RegisterUser(user);
-                response.Success = true;
-                response.StatusCode = 200;
-                response.ReasonPhrase = "OK";
-                response.Data = newUser.Data;
-                return StatusCode(response.StatusCode, response);
-            }
-            catch (Exception ex)
-            {
-                response.Success = false;
-                response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
-                response.Message = "Register failed!";
-                response.AddError(ex.Message);
-                return StatusCode(response.StatusCode, response);
-            }
-        }
-
-        [HttpPatch("change-password/{id}")]
-        [Authorize]
-        public async Task<IActionResult> ChangePassword(int id, string oldPassword, string newPassword)
-        {
-            var response = new Response<User>();
-
-            if (!ModelState.IsValid)
-            {
-                response.Success = false;
-                response.StatusCode = 400;
-                response.ReasonPhrase = "Bad Request";
-                response.Message = "Invalid user data";
-                response.Errors = ModelState.Values
-                    .SelectMany(x => x.Errors)
-                    .Select(xx => xx.ErrorMessage)
-                    .ToList();
-                return BadRequest(response);
-            }
-
-            try
-            {
-                await _service.UpdateUserPassword(id, oldPassword, newPassword);
-                response.Success = true;
-                response.StatusCode = 200;
-                response.ReasonPhrase = "OK";
-                response.Message = "Change password successfully!";
-                return StatusCode(response.StatusCode, response);
-            }
-            catch (Exception ex)
-            {
-                response.Success = false;
-                response.StatusCode = 401;
-                response.ReasonPhrase = "Unauthorized";
-                response.Message = "Change password failed!";
+                response.StatusCode = 500;
+                response.ReasonPhrase = "Internal Server Error";
+                response.Message = "Get location by user id failed!";
                 response.AddError(ex.Message);
                 return StatusCode(response.StatusCode, response);
             }

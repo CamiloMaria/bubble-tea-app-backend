@@ -28,9 +28,9 @@ namespace BubbleTea.Application.Services
             return await _userRepository.CreateUserAsync(user);
         }
 
-        public async Task<Response<User>> UpdateUSer(User user)
+        public async Task<Response<User>> UpdateUser(User user)
         {
-            return await _userRepository.UpdateUSerAsync(user);
+            return await _userRepository.UpdateUserAsync(user);
         }
 
         public async Task<Response<User>> DeleteUser(int id)
